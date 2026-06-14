@@ -1,44 +1,39 @@
-from fastapi import FastAPI, Depends
-from app.database import supabase 
-from app.routers.dependencies import get_current_user
-from app.routers import auth, patient, scans
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from app.config import settings
+from app.routers import auth, cases, scans
 
-# 1. Initialize FastAPI application
 app = FastAPI(
-    title="MedGuard AI API",
-    description="Backend system for medical imaging management and AI-powered diagnostic analysis.",
-    version="1.0.0"
+    title       = "MedGuard AI API",
+    description = "Breast cancer screening platform API",
+    version     = "1.0.0",
+    docs_url    = "/docs" if settings.is_development else None,
+    redoc_url   = None
 )
 
-# 2. Include Routers
+origins = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:5173",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins     = origins,
+    allow_credentials = True,
+    allow_methods     = ["*"],
+    allow_headers     = ["*"],
+)
+
 app.include_router(auth.router)
-app.include_router(patient.router)
+app.include_router(cases.router)
 app.include_router(scans.router)
 
-# 3. Root Endpoint
-@app.get("/")
-def read_root():
-    if supabase:
-        return {
-            "status": "online",
-            "message": "Welcome to the MedGuard-AI system.",
-            "database_connected": True
-        }
+@app.get("/", tags=["Health"])
+def health_check():
     return {
-        "status": "error",
-        "message": "Server is running, but there is a connection issue with Supabase.",
-        "database_connected": False
-    }
-
-# 4. Protected Demo Endpoint
-@app.get("/api/medical-records", tags=["Medical Data"])
-def get_secure_data(current_user: dict = Depends(get_current_user)):
-    doctor_id = current_user.get("sub")
-    
-    return {
-        "message": "Access to secure records granted.",
-        "secure_info": "This is sensitive medical data accessible only by authorized clinicians.",
-        "doctor_profile": {
-            "id": doctor_id
-        }
+        "status":      "online",
+        "environment": settings.APP_ENV,
+        "schema":      settings.DB_SCHEMA,
+        "version":     "1.0.0"
     }

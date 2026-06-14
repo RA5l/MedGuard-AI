@@ -1,6 +1,20 @@
-from supabase import create_client
+from supabase import create_client, Client
 from app.config import settings
 
-# Initialize Supabase clients using the settings object
-supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_ANON_KEY)
-supabase_admin = create_client(settings.SUPABASE_URL, settings.SUPABASE_SERVICE_ROLE_KEY)
+# ─────────────────────────────────────────────
+# supabase       ← for regular queries (RLS applies)
+# supabase_admin ← for administrative operations (bypasses RLS)
+# ─────────────────────────────────────────────
+
+supabase: Client = create_client(
+    settings.SUPABASE_URL,
+    settings.SUPABASE_ANON_KEY
+)
+
+supabase_admin: Client = create_client(
+    settings.SUPABASE_URL,
+    settings.SUPABASE_SERVICE_ROLE_KEY
+)
+
+# Schema used in queries (e.g., "dev" for development, "public" for production)
+SCHEMA = settings.DB_SCHEMA  # "dev" or "public"
