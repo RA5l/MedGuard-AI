@@ -1,0 +1,45 @@
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../features/auth/context/AuthContext';
+
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  allowedRoles?: ('admin' | 'doctor' | 'radiologist')[];
+}
+
+export default function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
+  const { user, profile, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-medical-bg">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-4 border-medical-accent border-t-transparent rounded-full animate-spin" />
+          <p className="text-medical-text/60 text-sm">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Unauthenticated users go to login.
+  if (!user) return <Navigate to="/login" replace />;
+
+  // Deactivated accounts cannot access any protected route.
+  if (profile && !profile.is_active) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-medical-bg">
+        <div className="bg-medical-surface border border-medical-border rounded-xl p-8 max-w-md text-center">
+          <p className="text-2xl mb-2">🔒</p>
+          <h2 className="text-medical-text font-bold text-lg mb-2">Account Deactivated</h2>
+          <p className="text-medical-text/60 text-sm">Contact your administrator to restore access.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Role-restricted routes redirect unauthorized users to dashboard.
+  if (allowedRoles && profile && !allowedRoles.includes(profile.role)) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <>{children}</>;
+}

@@ -1,149 +1,142 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import 'tailwindcss';
 
 @theme {
+  /* ── Fonts ─────────────────────────────────────────── */
   --font-sans: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* ── Surfaces & Layout ─────────────────────────────── */
+  --color-medical-bg:             #F0F4F8;
+  --color-medical-surface:        #FFFFFF;
+  --color-medical-surface-raised: #F8FAFC;
+  --color-medical-border:         #CBD5E1;
+  --color-medical-border-subtle:  #E2E8F0;
+
+  /* ── Text ──────────────────────────────────────────── */
+  --color-medical-text:           #0F172A;
+  --color-medical-text-secondary: #475569;
+  --color-medical-text-muted:     #94A3B8;
+  --color-medical-text-inverse:   #FFFFFF;
+
+  /* ── Brand ─────────────────────────────────────────── */
+  --color-medical-primary:        #0A4F8A;
+  --color-medical-primary-hover:  #083D6B;
+  --color-medical-primary-light:  #EFF6FF;
+  --color-medical-accent:         #0891B2;
+  --color-medical-accent-light:   #ECFEFF;
+
+  /* ── Semantic ───────────────────────────────────────── */
+  --color-medical-success:        #16A34A;
+  --color-medical-success-bg:     #F0FDF4;
+  --color-medical-warning:        #D97706;
+  --color-medical-warning-bg:     #FFFBEB;
+  --color-medical-error:          #DC2626;
+  --color-medical-error-bg:       #FEF2F2;
+  --color-medical-info:           #2563EB;
+  --color-medical-info-bg:        #EFF6FF;
+
+  /* ── Medical Domain ─────────────────────────────────── */
+  --color-medical-malignant:      #B91C1C;
+  --color-medical-malignant-soft: #FEF2F2;
+  --color-medical-benign:         #15803D;
+  --color-medical-benign-soft:    #F0FDF4;
+  --color-medical-suspicious:     #B45309;
+  --color-medical-suspicious-soft:#FFFBEB;
+  --color-medical-normal:         #15803D;
+  --color-medical-normal-soft:    #F0FDF4;
+
+  /* ── Case Status ────────────────────────────────────── */
+  --color-medical-pending:            #3B82F6;
+  --color-medical-pending-soft:       #EFF6FF;
+  --color-medical-processing:         #7C3AED;
+  --color-medical-processing-soft:    #F5F3FF;
+  --color-medical-ai-complete:        #059669;
+  --color-medical-ai-complete-soft:   #ECFDF5;
+  --color-medical-reviewed:           #0891B2;
+  --color-medical-reviewed-soft:      #ECFEFF;
+  --color-medical-reported:           #0A4F8A;
+  --color-medical-reported-soft:      #EFF6FF;
+  --color-medical-archived:           #64748B;
+  --color-medical-archived-soft:      #F8FAFC;
+
+  /* ── Priority ───────────────────────────────────────── */
+  --color-medical-priority-routine:   #64748B;
+  --color-medical-priority-low:       #2563EB;
+  --color-medical-priority-high:      #D97706;
+  --color-medical-priority-urgent:    #DC2626;
+
+  /* ── Roles ──────────────────────────────────────────── */
+  --color-medical-role-admin:             #7C3AED;
+  --color-medical-role-admin-soft:        #F5F3FF;
+  --color-medical-role-doctor:            #0A4F8A;
+  --color-medical-role-doctor-soft:       #EFF6FF;
+  --color-medical-role-radiologist:       #0891B2;
+  --color-medical-role-radiologist-soft:  #ECFEFF;
+
+  /* ── Spacing / Shape / Shadow ───────────────────────── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
 }
 
-/*(Light Mode) */
-.light-theme {
-  --color-medical-bg: #FFFFFF;
-  --color-medical-surface: #F8FAFC;
-  --color-medical-border: #E2E8F0;
-  --color-medical-primary: #0A4F8A;
-  --color-medical-accent: #00828F;
-  --color-medical-text: #0F172A;
-  
-  --color-medical-normal: #2E7D32;
-  --color-medical-benign: #E65100;
-  --color-medical-malignant: #C62828;
+/* ── Dark Theme Overrides ───────────────────────────────── */
+.dark {
+  --color-medical-bg:             #0B1120;
+  --color-medical-surface:        #111827;
+  --color-medical-surface-raised: #1E2736;
+  --color-medical-border:         #1E293B;
+  --color-medical-border-subtle:  #334155;
 
-    /* Status Colors */
-  --color-medical-pending: #D97706;
-  --color-medical-processing: #2563EB;
-  --color-medical-ai-complete: #7C3AED;
-  --color-medical-reviewed: #0891B2;
-  --color-medical-reported: #16A34A;
-  --color-medical-archived: #64748B;
+  --color-medical-text:           #F1F5F9;
+  --color-medical-text-secondary: #94A3B8;
+  --color-medical-text-muted:     #475569;
 
-  /* Priority Colors */
-  --color-medical-priority-routine: #94A3B8;
-  --color-medical-priority-low: #2563EB;
-  --color-medical-priority-high: #D97706;
-  --color-medical-priority-urgent: #DC2626;
+  --color-medical-primary-light:  #172554;
+  --color-medical-accent-light:   #164E63;
 
-  /* Role Colors */
-  --color-medical-role-admin: #7C3AED;
-  --color-medical-role-doctor: #00828F;
-  --color-medical-role-radiologist: #2563EB;
+  --color-medical-malignant-soft:     #1f0a0a;
+  --color-medical-benign-soft:        #052e16;
+  --color-medical-suspicious-soft:    #1c1008;
+  --color-medical-normal-soft:        #052e16;
 
-  /* Soft background tints — pastel, for light mode badges/icons */
-  --color-medical-pending-soft: #FEF3E2;
-  --color-medical-processing-soft: #DBEAFE;
-  --color-medical-ai-complete-soft: #EDE9FE;
-  --color-medical-reviewed-soft: #CFFAFE;
-  --color-medical-reported-soft: #DCFCE7;
-  --color-medical-archived-soft: #F1F5F9;
+  --color-medical-pending-soft:       #1E3A5F;
+  --color-medical-processing-soft:    #2E1065;
+  --color-medical-ai-complete-soft:   #064E3B;
+  --color-medical-reviewed-soft:      #164E63;
+  --color-medical-reported-soft:      #1E3A5F;
+  --color-medical-archived-soft:      #1E293B;
 
-  --color-medical-role-admin-soft: #EDE9FE;
-  --color-medical-role-doctor-soft: #E0F7FA;
-  --color-medical-role-radiologist-soft: #DBEAFE;
+  --color-medical-role-admin-soft:        #2E1065;
+  --color-medical-role-doctor-soft:       #172554;
+  --color-medical-role-radiologist-soft:  #164E63;
 
-  --color-medical-normal-soft: #E8F5E9;
-  --color-medical-malignant-soft: #FDECEC;
-
-  /* Soft background tints — pastel, for table badges in light mode */
-  --color-medical-pending-soft: #FEF3E2;
-  --color-medical-processing-soft: #DBEAFE;
-  --color-medical-ai-complete-soft: #EDE9FE;
-  --color-medical-reviewed-soft: #CFFAFE;
-  --color-medical-reported-soft: #DCFCE7;
-  --color-medical-archived-soft: #F1F5F9;
-
-  --color-medical-role-admin-soft: #EDE9FE;
-  --color-medical-role-doctor-soft: #E0F7FA;
-  --color-medical-role-radiologist-soft: #DBEAFE;
-
-  --color-medical-normal-soft: #E8F5E9;
-  --color-medical-malignant-soft: #FDECEC;
+  --color-medical-success-bg:     #052e16;
+  --color-medical-warning-bg:     #1c1008;
+  --color-medical-error-bg:       #1f0a0a;
+  --color-medical-info-bg:        #0f1f3d;
 }
 
-/*(Dark Mode) */
-.dark-theme {/* Soft background tints — subtle dark variants over surface */
-  --color-medical-pending-soft: #3D2F12;
-  --color-medical-processing-soft: #1E2F4D;
-  --color-medical-ai-complete-soft: #2E1F4D;
-  --color-medical-reviewed-soft: #163840;
-  --color-medical-reported-soft: #16321F;
-  --color-medical-archived-soft: #2A3138;
-
-  --color-medical-role-admin-soft: #2E1F4D;
-  --color-medical-role-doctor-soft: #163840;
-  --color-medical-role-radiologist-soft: #1E2F4D;
-
-  --color-medical-normal-soft: #16321F;
-  --color-medical-malignant-soft: #3D1616;
-  --color-medical-bg: #0A192F;
-  --color-medical-surface: #1E1E1E;
-  --color-medical-border: #374151;
-  --color-medical-primary: #0A4F8A;
-  --color-medical-accent: #00828F;
-  --color-medical-text: #E2E8F0;
-  
-  --color-medical-normal: #1B5E20;
-  --color-medical-benign: #B25E00;
-  --color-medical-malignant: #C62828;
-
-  /* Status Colors */
-  --color-medical-pending: #F59E0B;
-  --color-medical-processing: #60A5FA;
-  --color-medical-ai-complete: #A78BFA;
-  --color-medical-reviewed: #22D3EE;
-  --color-medical-reported: #4ADE80;
-  --color-medical-archived: #94A3B8;
-
-  /* Priority Colors */
-  --color-medical-priority-routine: #64748B;
-  --color-medical-priority-low: #60A5FA;
-  --color-medical-priority-high: #F59E0B;
-  --color-medical-priority-urgent: #F87171;
-
-  /* Role Colors */
-  --color-medical-role-admin: #A78BFA;
-  --color-medical-role-doctor: #00B4C2;
-  --color-medical-role-radiologist: #60A5FA;
-
-  /* Soft background tints — subtle dark variants over surface */
-  --color-medical-pending-soft: #3D2F12;
-  --color-medical-processing-soft: #1E2F4D;
-  --color-medical-ai-complete-soft: #2E1F4D;
-  --color-medical-reviewed-soft: #163840;
-  --color-medical-reported-soft: #16321F;
-  --color-medical-archived-soft: #2A3138;
-
-  --color-medical-role-admin-soft: #2E1F4D;
-  --color-medical-role-doctor-soft: #163840;
-  --color-medical-role-radiologist-soft: #1E2F4D;
-
-  --color-medical-normal-soft: #16321F;
-  --color-medical-malignant-soft: #3D1616;
-
-  
-}
-
-
+/* ── Base Styles ─────────────────────────────────────────── */
 body {
-  background-color: var(--color-medical-bg) !important;
-  color: var(--color-medical-text) !important;
+  background-color: var(--color-medical-bg);
+  color: var(--color-medical-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  margin: 0;
-  min-height: 100vh;
 }
 
-/* Medical Heatmap Gradient for Grad-CAM */
-.medical-heatmap-gradient {
-  background: linear-gradient(to right, #0022ff, #00a2ff, #00ff22, #ffea00, #ff0000);
+::selection {
+  background-color: var(--color-medical-primary);
+  color: #FFFFFF;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-medical-border) transparent;
 }

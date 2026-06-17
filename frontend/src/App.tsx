@@ -1,49 +1,44 @@
-import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import ProtectedRoute from './components/layout/ProtectedRoute';
-import AppLayout from './components/layout/AppLayout';
-import Login       from './pages/Login';
-import Dashboard   from './pages/Dashboard';
-import CasesList   from './pages/CasesList';
-import CaseDetails from './pages/CaseDetails';
-import ScanUpload from './pages/ScanUpload';
-import AdminPanel from './pages/AdminPanel';
+import { AuthProvider } from './features/auth/context/AuthContext';
+import AppLayout from './layouts/AppLayout';
+import ProtectedRoute from './layouts/ProtectedRoute';
+import LoginPage from './features/auth/pages/LoginPage';
+import DashboardPage from './features/dashboard/pages/DashboardPage';
+import CasesListPage from './features/cases/pages/CasesListPage';
+import CaseDetailsPage from './features/cases/pages/CaseDetailsPage';
+import ScanUploadPage from './features/upload/pages/ScanUploadPage';
+import AdminPanelPage from './features/admin/pages/AdminPanelPage';
 
 export default function App() {
-  const [isDarkMode, setIsDarkMode] = useState(true);
-
-  useEffect(() => {
-    document.body.classList.remove('light-theme', 'dark-theme');
-    document.body.classList.add(isDarkMode ? 'dark-theme' : 'light-theme');
-  }, [isDarkMode]);
-
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/login" element={
-            <Login isDarkMode={isDarkMode} onThemeToggle={() => setIsDarkMode(!isDarkMode)} />
-          } />
+          <Route path="/login" element={<LoginPage />} />
 
-          <Route element={
-            <ProtectedRoute>
-              <AppLayout isDarkMode={isDarkMode} onThemeToggle={() => setIsDarkMode(!isDarkMode)} />
-            </ProtectedRoute>
-          }>
-            <Route path="/dashboard"  element={<Dashboard />}   />
-            <Route path="/cases"      element={<CasesList />}   />
-            <Route path="/cases/:id"  element={<CaseDetails />} />
-            <Route path="/scans" element={<ScanUpload />} />
-            <Route path="/admin" element={
-              <ProtectedRoute allowedRoles={['admin']}>
-              <AdminPanel />
+          <Route
+            element={
+              <ProtectedRoute>
+                <AppLayout />
               </ProtectedRoute>
-                                        } />
+            }
+          >
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/cases" element={<CasesListPage />} />
+            <Route path="/cases/:id" element={<CaseDetailsPage />} />
+            <Route path="/scans" element={<ScanUploadPage />} />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminPanelPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
           </Route>
 
-          <Route path="/"  element={<Navigate to="/login" replace />} />
-          <Route path="*"  element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </Router>
     </AuthProvider>
