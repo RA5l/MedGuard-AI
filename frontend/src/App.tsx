@@ -7,7 +7,11 @@ import DashboardPage from './features/dashboard/pages/DashboardPage';
 import CasesListPage from './features/cases/pages/CasesListPage';
 import CaseDetailsPage from './features/cases/pages/CaseDetailsPage';
 import ScanUploadPage from './features/upload/pages/ScanUploadPage';
+import ReportsPage from './features/reports/pages/ReportsPage';
+import AIResultsPage from './features/ai-results/pages/AIResultsPage';
 import AdminPanelPage from './features/admin/pages/AdminPanelPage';
+import RadiologistWorklistPage from './features/assignment/pages/RadiologistWorklistPage';
+
 
 export default function App() {
   return (
@@ -27,6 +31,9 @@ export default function App() {
             <Route path="/cases" element={<CasesListPage />} />
             <Route path="/cases/:id" element={<CaseDetailsPage />} />
             <Route path="/scans" element={<ScanUploadPage />} />
+            <Route path="/results" element={<AIResultsPage />} />
+            <Route path="/reports" element={<ReportsPage />} />
+            <Route path="/worklist" element={<RadiologistWorklistPage />} />
             <Route
               path="/admin"
               element={
@@ -39,6 +46,7 @@ export default function App() {
           </Route>
 
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          
         </Routes>
       </Router>
     </AuthProvider>

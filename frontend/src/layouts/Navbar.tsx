@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Sun, Moon, Menu, Bell } from 'lucide-react';
 import { useAuth } from '../features/auth/context/AuthContext';
+import { useCases } from '../features/cases/hooks/useCases';
 import { ROLE_CONFIG } from '../lib/badges';
 
 interface NavbarProps {
@@ -18,10 +19,15 @@ const ROLE_COLORS: Record<string, string> = {
 
 export default function Navbar({ isDarkMode, onThemeToggle, pageTitle, onMenuClick }: NavbarProps) {
   const { profile } = useAuth();
+  const { cases } = useCases();
+
+  // Same definition as the Dashboard's Radiologist Worklist (pending/processing/ai_complete).
+  const hasPendingReview = cases.some(c => c.status === 'pending' || c.status === 'processing' || c.status === 'ai_complete');
 
   const roleKey   = profile?.role ?? null;
 const roleLabel = roleKey ? (ROLE_CONFIG[roleKey]?.label ?? roleKey) : null;
 const roleColor = roleKey ? ROLE_COLORS[roleKey] : null;
+
 
   const initials = profile?.full_name
     ?.split(' ')
@@ -81,8 +87,10 @@ const roleColor = roleKey ? ROLE_COLORS[roleKey] : null;
           aria-label="Notifications"
         >
           <Bell size={16} strokeWidth={2} />
-          {/* Unread dot — show when there are notifications */}
-          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-medical-error" />
+          {/* Unread dot — only shown when there are cases pending review */}
+          {hasPendingReview && (
+            <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-medical-error" />
+          )}
         </button>
 
         {/* Theme toggle */}

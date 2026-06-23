@@ -57,7 +57,7 @@ export default function ScanList({ caseId }: ScanListProps) {
                 </div>
                 <div className="min-w-0">
                   <p className="text-xs font-semibold text-medical-text truncate">
-                    {scan.scan_view_type} · {scan.laterality === 'L' ? 'Left' : 'Right'}
+                    {scan.scan_view_type} · {scan.laterality}
                   </p>
                   <p className="text-[11px] text-medical-text/40 font-medium mt-0.5">
                     Captured {formatDate(scan.created_at)}

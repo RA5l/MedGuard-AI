@@ -61,7 +61,7 @@ export function useUsers() {
   // User creation goes through the backend API because Supabase admin operations
   // (creating auth users) require the service key, which must never be in the client.
   const createUser = async (payload: CreateUserPayload): Promise<void> => {
-    await api.post('/admin/users', payload);
+    await api.post('/api/auth/create-user', payload);
     await fetchUsers();
   };
 

@@ -1,16 +1,13 @@
 from supabase import create_client, Client
 from app.config import settings
 
-# ─────────────────────────────────────────────
-# supabase       ← for regular queries (RLS applies)
-# supabase_admin ← for administrative operations (bypasses RLS)
-# ─────────────────────────────────────────────
-
+# Regular client: bound by Row Level Security (RLS)
 supabase: Client = create_client(
     settings.SUPABASE_URL,
     settings.SUPABASE_ANON_KEY
 )
 
+# Admin client: uses service role key to bypass Row Level Security (RLS)
 supabase_admin: Client = create_client(
     settings.SUPABASE_URL,
     settings.SUPABASE_SERVICE_ROLE_KEY

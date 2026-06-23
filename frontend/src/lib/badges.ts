@@ -13,10 +13,8 @@ import {
 } from 'lucide-react';
 import type { ElementType } from 'react';
 
-// ---------------------------------------------------------------------------
 // Status config
 // Keys match the `status` field on the `cases` table.
-// ---------------------------------------------------------------------------
 
 interface StatusConfig {
   label: string;
@@ -63,10 +61,8 @@ export const STATUS_CONFIG: Record<string, StatusConfig> = {
   },
 };
 
-// ---------------------------------------------------------------------------
 // Priority config
 // Keys 0–3 match form values in CasesListPage (0 = Routine, 3 = Urgent).
-// ---------------------------------------------------------------------------
 
 interface PriorityConfig {
   label: string;
@@ -101,10 +97,8 @@ export const PRIORITY_CONFIG: Record<number, PriorityConfig> = {
   },
 };
 
-// ---------------------------------------------------------------------------
 // Role config
 // Used by Navbar badge and AdminPanel role column.
-// ---------------------------------------------------------------------------
 
 interface RoleConfig {
   label: string;
@@ -133,10 +127,8 @@ export const ROLE_CONFIG: Record<string, RoleConfig> = {
   },
 };
 
-// ---------------------------------------------------------------------------
 // Active/Inactive status classes
 // Used in AdminPanel user table.
-// ---------------------------------------------------------------------------
 
 export const ACTIVE_STATUS_CLASSES = {
   active:
@@ -145,13 +137,14 @@ export const ACTIVE_STATUS_CLASSES = {
     'bg-(--color-medical-malignant-soft) text-(--color-medical-malignant) border border-(--color-medical-malignant)/30',
 };
 
-// ---------------------------------------------------------------------------
 // AI prediction text colors
 // Applied to the AI result column in cases and dashboard tables.
-// ---------------------------------------------------------------------------
 
+// Matches the deployed model's actual 2-class output (Benign vs Malignant
+// only — confirmed from the training notebook, NUM_CLASSES=2). No
+// "Normal"/"Suspicious" classes exist; the prediction_type DB enum was
+// updated to match (see migration note).
 export const PREDICTION_COLORS: Record<string, string> = {
-  Malignant:  'text-(--color-medical-malignant)',
-  Benign:     'text-(--color-medical-normal)',
-  Suspicious: 'text-(--color-medical-benign)',
+  Malignant: 'text-(--color-medical-malignant)',
+  Benign:    'text-(--color-medical-normal)',
 };

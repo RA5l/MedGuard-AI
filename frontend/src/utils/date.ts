@@ -19,6 +19,17 @@ export function formatDate(value?: string | null): string {
 }
 
 /**
+ * Formats an ISO date string into HH:MM (24-hour).
+ * Returns '—' for null/undefined inputs.
+ *
+ * @example formatTime('2026-06-14T09:18:00Z') → '09:18'
+ */
+export function formatTime(value?: string | null): string {
+  if (!value) return '—';
+  return new Date(value).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+
+/**
  * Returns a greeting word based on the current hour.
  * Used in the dashboard welcome heading.
  */

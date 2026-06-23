@@ -5,7 +5,7 @@ export interface ScanRecord {
   id: string;
   case_id: string;
   scan_view_type: string;
-  laterality: 'L' | 'R';
+  laterality: string; // generated column on the DB side, returns 'Left'/'Right' (not 'L'/'R')
   original_scan_url: string;
   created_at: string;
 }

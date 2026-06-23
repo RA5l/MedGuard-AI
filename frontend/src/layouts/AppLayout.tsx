@@ -1,8 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion'; 
+import { motion, AnimatePresence } from 'framer-motion';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
+import { useAuth } from '../features/auth/context/AuthContext';
+import { useAssignmentRealtime } from '../features/assignment/hooks/useAssignmentRealtime';
+import AssignmentToastContainer from '../features/assignment/components/AssignmentToast';
+import type { ToastMessage } from '../features/assignment/components/AssignmentToast';
+import type { AssignmentChangePayload } from '../features/assignment/hooks/useAssignmentRealtime';
+import { getScopedQuery } from '../lib/supabaseClient';
 
 const PAGE_TITLES: Record<string, string> = {
   '/dashboard': 'Dashboard',
@@ -11,10 +17,9 @@ const PAGE_TITLES: Record<string, string> = {
   '/results':   'AI Results',
   '/reports':   'Reports',
   '/admin':     'Admin Panel',
+  '/worklist':  'My Worklist',
 };
 
-// Theme is toggled via CSS class on <html> to match the light-theme / dark-theme
-// selectors defined in index.css. State is persisted to localStorage.
 function useTheme() {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     const stored = localStorage.getItem('medguard-theme');
@@ -26,10 +31,10 @@ function useTheme() {
     const root = document.documentElement;
     if (isDarkMode) {
       root.classList.remove('light-theme');
-      root.classList.add('dark');                        
+      root.classList.add('dark');
       localStorage.setItem('medguard-theme', 'dark');
     } else {
-      root.classList.remove('dark');                    
+      root.classList.remove('dark');
       root.classList.add('light-theme');
       localStorage.setItem('medguard-theme', 'light');
     }
@@ -40,16 +45,50 @@ function useTheme() {
 
 export default function AppLayout() {
   const { isDarkMode, toggle } = useTheme();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed]   = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const { profile } = useAuth();
 
   const pageTitle = PAGE_TITLES[location.pathname] ?? 'MedGuard AI';
 
-  // Close the mobile drawer automatically on navigation.
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [location.pathname]);
+  useEffect(() => { setMobileOpen(false); }, [location.pathname]);
+
+  // ── Realtime toast state ──────────────────────────────────────────────────
+  const [toasts, setToasts] = useState<ToastMessage[]>([]);
+
+  const dismissToast = useCallback((id: string) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
+  }, []);
+
+  const addToast = useCallback(async (payload: AssignmentChangePayload) => {
+    // Try to resolve case_code for better UX
+    let caseCode: string | undefined;
+    try {
+      const { data } = await getScopedQuery('cases')
+        .select('case_code')
+        .eq('id', payload.case_id)
+        .single();
+      caseCode = data?.case_code;
+    } catch { /* non-critical */ }
+
+    setToasts(prev => [
+      ...prev,
+      {
+        id:       `${payload.id}-${Date.now()}`,
+        status:   payload.status,
+        caseId:   payload.case_id,
+        caseCode,
+      },
+    ]);
+  }, []);
+
+  // Subscribe to realtime updates for both doctors and radiologists
+  useAssignmentRealtime({
+    currentUserId: profile?.id,
+    onDoctorUpdate:      addToast,
+    onRadiologistUpdate: addToast,
+  });
 
   return (
     <div className="flex h-screen overflow-hidden bg-medical-bg">
@@ -80,9 +119,10 @@ export default function AppLayout() {
             <Outlet />
           </motion.main>
         </AnimatePresence>
-
-        
       </div>
+
+      {/* Global assignment notifications */}
+      <AssignmentToastContainer toasts={toasts} onDismiss={dismissToast} />
     </div>
   );
 }

@@ -50,13 +50,7 @@ async function fetchProfile(userId: string): Promise<UserProfile | null> {
 
     let resolvedRole: UserProfile['role'] = 'doctor';
 
-    if (userData.role) {
-      resolvedRole = normalizeRole(userData.role);
-
-    } else if (userData.role_name) {
-      resolvedRole = normalizeRole(userData.role_name);
-
-    } else if (userData.role_id) {
+    if (userData.role_id) {
       const { data: roleRow, error: roleError } = await getScopedQuery('roles')
         .select('role_name')
         .eq('id', userData.role_id)
@@ -70,7 +64,7 @@ async function fetchProfile(userId: string): Promise<UserProfile | null> {
         console.warn('[Auth] role_id found but no matching role row. role_id:', userData.role_id);
       }
     } else {
-      console.warn('[Auth] No role column found. Columns:', Object.keys(userData));
+      console.warn('[Auth] No role_id column found. Columns:', Object.keys(userData));
     }
 
     console.info(`[Auth] Profile loaded — ${userData.full_name} / role: ${resolvedRole}`);

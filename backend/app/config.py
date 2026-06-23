@@ -17,6 +17,9 @@ class Settings:
     # OpenAI
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
 
+    # AI inference service (medguard-inference, run separately - see its README)
+    INFERENCE_SERVICE_URL: str = os.getenv("INFERENCE_SERVICE_URL", "http://localhost:8001")
+
     @property
     def is_development(self) -> bool:
         return self.APP_ENV == "development"

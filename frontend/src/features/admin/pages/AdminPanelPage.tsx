@@ -9,9 +9,7 @@ import { formatDate } from '../../../utils/date';
 import { getUserFriendlyError } from '../../../lib/errorMessages';
 import type { ElementType } from 'react';
 
-// ---------------------------------------------------------------------------
 // Local badge components
-// ---------------------------------------------------------------------------
 
 function RoleBadge({ role }: { role: string }) {
   const cfg  = ROLE_CONFIG[role];
@@ -32,18 +30,14 @@ function ActiveBadge({ active }: { active: boolean }) {
   );
 }
 
-// ---------------------------------------------------------------------------
 // Constants
-// ---------------------------------------------------------------------------
 
 const ROLE_OPTIONS = [
   { value: 'doctor',      label: 'Doctor'      },
   { value: 'radiologist', label: 'Radiologist' },
 ];
 
-// ---------------------------------------------------------------------------
 // Page
-// ---------------------------------------------------------------------------
 
 export default function AdminPanelPage() {
   const { users, loading, error, createUser, deactivateUser } = useUsers();

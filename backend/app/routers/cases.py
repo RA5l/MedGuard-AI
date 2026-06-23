@@ -7,10 +7,7 @@ from app.routers.dependencies import get_current_user, require_admin
 router = APIRouter(prefix="/api/cases", tags=["Cases"])
 
 
-# ─────────────────────────────────────────────
-# GET /api/cases — list cases
-# Admin sees all, doctor sees only assigned
-# ─────────────────────────────────────────────
+
 @router.get("", response_model=CaseListResponse)
 async def list_cases(
     status:   Optional[str] = Query(None),
@@ -65,9 +62,7 @@ async def list_cases(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# ─────────────────────────────────────────────
-# POST /api/cases — create case
-# ─────────────────────────────────────────────
+
 @router.post("", response_model=CaseResponse, status_code=status.HTTP_201_CREATED)
 async def create_case(
     body: CaseCreate,
@@ -129,9 +124,7 @@ async def create_case(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# ─────────────────────────────────────────────
-# GET /api/cases/{case_id} — single case
-# ─────────────────────────────────────────────
+
 @router.get("/{case_id}", response_model=CaseResponse)
 async def get_case(
     case_id: str,
@@ -177,9 +170,7 @@ async def get_case(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# ─────────────────────────────────────────────
-# PATCH /api/cases/{case_id} — update case
-# ─────────────────────────────────────────────
+
 @router.patch("/{case_id}", response_model=CaseResponse)
 async def update_case(
     case_id: str,
@@ -215,9 +206,7 @@ async def update_case(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# ─────────────────────────────────────────────
-# DELETE /api/cases/{case_id} — admin only
-# ─────────────────────────────────────────────
+
 @router.delete("/{case_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_case(
     case_id: str,

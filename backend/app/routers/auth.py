@@ -10,9 +10,7 @@ from app.routers.dependencies import get_current_user, require_admin
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 
 
-# ─────────────────────────────────────────────
-# POST /api/auth/login
-# ─────────────────────────────────────────────
+
 @router.post("/login", response_model=LoginResponse)
 async def login(body: LoginRequest):
     try:
@@ -65,9 +63,7 @@ async def login(body: LoginRequest):
             detail="Login failed: Invalid email or password"
         )
 
-# ─────────────────────────────────────────────
-# GET /api/auth/me
-# ─────────────────────────────────────────────
+
 @router.get("/me", response_model=UserProfile)
 async def get_me(current_user: dict = Depends(get_current_user)):
     """
@@ -83,9 +79,7 @@ async def get_me(current_user: dict = Depends(get_current_user)):
     )
 
 
-# ─────────────────────────────────────────────
-# POST /api/auth/logout
-# ─────────────────────────────────────────────
+
 @router.post("/logout")
 async def logout(current_user: dict = Depends(get_current_user)):
     """
@@ -98,9 +92,7 @@ async def logout(current_user: dict = Depends(get_current_user)):
         return {"message": "Logged out"}
 
 
-# ─────────────────────────────────────────────
-# POST /api/auth/create-user  (Just Admin)
-# ─────────────────────────────────────────────
+
 @router.post(
     "/create-user",
     response_model=CreateUserResponse,
@@ -114,7 +106,6 @@ async def create_user(
     the Admin creates a new user (doctor or admin)
     """
     try:
-        # 1. create auth user in Supabase
         auth_res = supabase_admin.auth.admin.create_user({
             "email":            body.email,
             "password":         body.password,
@@ -133,7 +124,6 @@ async def create_user(
 
         new_user_id = str(auth_res.user.id)
 
-        # 2.create user profile in DB via RPC 
         supabase_admin.rpc("create_user_by_admin", {
             "p_user_id":   new_user_id,
             "p_email":     body.email,
@@ -144,7 +134,6 @@ async def create_user(
             "p_schema":    SCHEMA
         }).execute()
 
-        # 3. log the action in audit_logs
         supabase_admin.schema(SCHEMA).table("audit_logs").insert({
             "user_id":     admin["id"],
             "action":      "USER_CREATED",
@@ -174,9 +163,7 @@ async def create_user(
         )
 
 
-# ─────────────────────────────────────────────
-# GET /api/auth/users  (Just Admin)
-# ─────────────────────────────────────────────
+
 @router.get("/users")
 async def list_users(admin: dict = Depends(require_admin)):
     """
@@ -209,9 +196,7 @@ async def list_users(admin: dict = Depends(require_admin)):
         )
 
 
-# ─────────────────────────────────────────────
-# PATCH /api/auth/users/{user_id}/deactivate  (Just Admin)
-# ─────────────────────────────────────────────
+
 @router.patch("/users/{user_id}/deactivate")
 async def deactivate_user(
     user_id: str,
@@ -225,7 +210,6 @@ async def deactivate_user(
             {"is_active": False}
         ).eq("id", user_id).execute()
 
-        # Audit Log
         supabase_admin.schema(SCHEMA).table("audit_logs").insert({
             "user_id":     admin["id"],
             "action":      "USER_DEACTIVATED",

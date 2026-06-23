@@ -27,8 +27,9 @@ const NAV_ITEMS: NavItem[] = [
   { path: '/cases',     label: 'Cases',      icon: FolderHeart,     roles: ['admin', 'doctor', 'radiologist'] },
   { path: '/scans',     label: 'Scans',      icon: ScanLine,        roles: ['admin', 'doctor', 'radiologist'] },
   { path: '/results',   label: 'AI Results', icon: Activity,        roles: ['admin', 'doctor', 'radiologist'] },
-  { path: '/reports',   label: 'Reports',    icon: ClipboardList,   roles: ['admin', 'doctor']                },
-  { path: '/admin',     label: 'Admin',      icon: SettingsIcon,    roles: ['admin']                         },
+  { path: '/reports',   label: 'Reports',    icon: ClipboardList,   roles: ['admin', 'doctor', 'radiologist'] },
+  { path: '/admin',     label: 'Admin',      icon: SettingsIcon,    roles: ['admin']                          },
+  {path: '/worklist',   label: 'Worklist',   icon: ClipboardList,   roles: ['radiologist']                    }
 ];
 
 interface SidebarProps {
@@ -42,9 +43,7 @@ export default function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose
   const { profile, signOut, loading } = useAuth();
   const navigate = useNavigate();
 
-  // While auth is loading: show all non-admin items as a safe fallback.
-  // Once profile loads: filter by actual role.
-  // This prevents the "empty sidebar" flash on first load.
+
   const visibleItems = loading
     ? NAV_ITEMS.filter(i => !i.roles.every(r => r === 'admin'))
     : NAV_ITEMS.filter(item =>
@@ -52,6 +51,7 @@ export default function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose
           ? item.roles.includes(profile.role as 'admin' | 'doctor' | 'radiologist')
           : item.roles.some(r => r !== 'admin')
       );
+      
 
   const handleSignOut = async () => {
     await signOut();
