@@ -13,6 +13,7 @@ import {
   ChevronsRight,
   Stethoscope,
   X,
+  ListTodo,
 } from 'lucide-react';
 
 interface NavItem {
@@ -29,7 +30,7 @@ const NAV_ITEMS: NavItem[] = [
   { path: '/results',   label: 'AI Results', icon: Activity,        roles: ['admin', 'doctor', 'radiologist'] },
   { path: '/reports',   label: 'Reports',    icon: ClipboardList,   roles: ['admin', 'doctor', 'radiologist'] },
   { path: '/admin',     label: 'Admin',      icon: SettingsIcon,    roles: ['admin']                          },
-  {path: '/worklist',   label: 'Worklist',   icon: ClipboardList,   roles: ['radiologist']                    }
+  {path: '/worklist',   label: 'Worklist',   icon: ListTodo,   roles: ['radiologist']                    }
 ];
 
 interface SidebarProps {

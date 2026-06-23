@@ -16,6 +16,13 @@ export interface GeneratedReport {
   };
 }
 
+// Annotation sets per canvas view, stored as a jsonb object in ai_results.annotations.
+// Each array holds serialised fabric.js Object descriptors.
+export interface AnnotationData {
+  original?: object[];
+  heatmap?:  object[];
+}
+
 export interface AIResult {
   id: string;
   case_id: string;
@@ -29,6 +36,8 @@ export interface AIResult {
   generated_report?: GeneratedReport;
   pipeline_version?: string;
   processing_ms?: number;
+  // Radiologist canvas annotations — shape: AnnotationData
+  annotations?: AnnotationData;
   created_at: string;
   updated_at?: string;
 }
@@ -62,5 +71,17 @@ export const aiService = {
       roi: roi ?? null,
     });
     return data;
+  },
+
+  // Persists radiologist canvas annotations back to the ai_results row.
+  // Called explicitly by the "Save Annotations" action — not on every stroke.
+  async saveAnnotations(resultId: string, annotations: AnnotationData): Promise<void> {
+    const { error } = await getScopedQuery('ai_results')
+      .update({ annotations })
+      .eq('id', resultId);
+
+    if (error) {
+      throw new Error(error.message || 'Failed to save annotations.');
+    }
   },
 };
